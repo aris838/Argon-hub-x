@@ -1,0 +1,411 @@
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TS = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+-- ================= KONFIG =================
+local HUB_NAME = "Argon Hub X"
+local HUB_AUTHOR = "by ipen1257"
+local HUB_VERSION = "v2.8.8"
+local KEY_LINK = "roblox.com.ms/communities/6882778615/"
+local VALID_KEY = "ARGON-2026"  -- <-- GANTI key yang valid di sini
+local THEME = {
+    bg = Color3.fromRGB(23, 23, 23),
+    sidebar = Color3.fromRGB(30, 30, 30),
+    card = Color3.fromRGB(38, 38, 38),
+    accent = Color3.fromRGB(229, 57, 53),
+    text = Color3.fromRGB(240, 240, 240),
+    subText = Color3.fromRGB(150, 150, 150),
+    trackOff = Color3.fromRGB(55, 55, 55),
+    trackOn = Color3.fromRGB(90, 90, 90),
+}
+-- ==========================================
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ArgonHubX"
+gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = LocalPlayer:FindFirstChildWhichIsA("PlayerGui")
+
+-- ===== Helpers =====
+local function corner(inst, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 8)
+    c.Parent = inst
+    return c
+end
+
+local function stroke(inst, color, thickness)
+    local s = Instance.new("UIStroke")
+    s.Color = color or Color3.fromRGB(60, 60, 60)
+    s.Thickness = thickness or 1
+    s.Transparency = 0.5
+    s.Parent = inst
+    return s
+end
+
+local function label(parent, text, size, pos, color, font, size2)
+    local l = Instance.new("TextLabel")
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = color or THEME.text
+    l.Font = font or Enum.Font.Gotham
+    l.TextSize = size2 or 13
+    l.Size = size
+    l.Position = pos
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.TextYAlignment = Enum.TextYAlignment.Center
+    l.TextTruncate = Enum.TextTruncate.AtEnd
+    l.Parent = parent
+    return l
+end
+
+local function notify(msg, color)
+    local n = Instance.new("Frame")
+    n.Size = UDim2.new(0, 240, 0, 40)
+    n.Position = UDim2.new(0.5, -120, 0, 20)
+    n.BackgroundColor3 = THEME.card
+    n.BorderSizePixel = 0
+    corner(n, 8)
+    stroke(n, color or THEME.accent, 1.5)
+    local t = label(n, msg, UDim2.new(1, -16, 1, 0), UDim2.new(0, 8, 0, 0), THEME.text, Enum.Font.GothamMedium, 12)
+    n.Parent = gui
+    TS:Create(n, TweenInfo.new(0.4), {Position = UDim2.new(0.5, -120, 0, 60)}):Play()
+    task.delay(3, function()
+        TS:Create(n, TweenInfo.new(0.4), {Position = UDim2.new(0.5, -120, 0, 10), BackgroundTransparency = 1}):Play()
+        TS:Create(t, TweenInfo.new(0.4), {TextTransparency = 1}):Play()
+        task.delay(0.5, function() n:Destroy() end)
+    end)
+end
+
+-- ===== Main Window =====
+local window = Instance.new("Frame")
+window.Name = "Window"
+window.Size = UDim2.new(0, 560, 0, 340)
+window.Position = UDim2.new(0.5, -280, 0.5, -170)
+window.BackgroundColor3 = THEME.bg
+window.BorderSizePixel = 0
+window.Active = true
+corner(window, 10)
+stroke(window, Color3.fromRGB(50, 50, 50), 1)
+window.Parent = gui
+
+-- Draggable
+local dragging, dragStart, startPos
+window.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = window.Position
+    end
+end)
+window.InputEnded:Connect(function() dragging = false end)
+UIS.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local d = input.Position - dragStart
+        window.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+    end
+end)
+
+-- Title bar
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 44)
+titleBar.BackgroundColor3 = THEME.bg
+titleBar.BorderSizePixel = 0
+titleBar.Parent = window
+
+local titleText = label(titleBar, HUB_NAME, UDim2.new(0, 150, 0, 20), UDim2.new(0, 14, 0, 6), THEME.text, Enum.Font.GothamBold, 15)
+label(titleBar, HUB_AUTHOR, UDim2.new(0, 150, 0, 14), UDim2.new(0, 14, 0, 26), THEME.subText, Enum.Font.Gotham, 11)
+
+local versionBadge = Instance.new("Frame")
+versionBadge.Size = UDim2.new(0, 48, 0, 20)
+versionBadge.Position = UDim2.new(0, 170, 0, 12)
+versionBadge.BackgroundColor3 = THEME.accent
+versionBadge.BorderSizePixel = 0
+corner(versionBadge, 10)
+versionBadge.Parent = titleBar
+label(versionBadge, HUB_VERSION, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), Color3.new(1, 1, 1), Enum.Font.GothamBold, 10).TextXAlignment = Enum.TextXAlignment.Center
+
+-- Close button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 26, 0, 26)
+closeBtn.Position = UDim2.new(1, -34, 0, 9)
+closeBtn.BackgroundColor3 = THEME.card
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = THEME.subText
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 13
+closeBtn.AutoButtonColor = false
+closeBtn.BorderSizePixel = 0
+corner(closeBtn, 6)
+closeBtn.Parent = titleBar
+closeBtn.MouseButton1Click:Connect(function() window:TweenSize(UDim2.new(0, 0, 0, 0), "Out", "Quad", 0.25, true) task.delay(0.3, function() gui.Enabled = false window.Size = UDim2.new(0, 560, 0, 340) end) end)
+
+-- ===== Sidebar =====
+local sidebar = Instance.new("Frame")
+sidebar.Name = "Sidebar"
+sidebar.Size = UDim2.new(0, 150, 1, -44)
+sidebar.Position = UDim2.new(0, 0, 0, 44)
+sidebar.BackgroundColor3 = THEME.sidebar
+sidebar.BorderSizePixel = 0
+sidebar.Visible = false
+sidebar.Parent = window
+
+local searchBox = Instance.new("TextBox")
+searchBox.Size = UDim2.new(1, -20, 0, 30)
+searchBox.Position = UDim2.new(0, 10, 0, 10)
+searchBox.BackgroundColor3 = THEME.card
+searchBox.PlaceholderText = "🔍  Search"
+searchBox.PlaceholderColor3 = THEME.subText
+searchBox.Text = ""
+searchBox.TextColor3 = THEME.text
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 12
+searchBox.ClearTextOnFocus = false
+searchBox.BorderSizePixel = 0
+corner(searchBox, 6)
+searchBox.Parent = sidebar
+
+local tabHolder = Instance.new("Frame")
+tabHolder.Size = UDim2.new(1, 0, 1, -100)
+tabHolder.Position = UDim2.new(0, 0, 0, 50)
+tabHolder.BackgroundTransparency = 1
+tabHolder.Parent = sidebar
+
+local tabLayout = Instance.new("UIListLayout")
+tabLayout.Padding = UDim.new(0, 4)
+tabLayout.Parent = tabHolder
+
+local content = Instance.new("ScrollingFrame")
+content.Name = "Content"
+content.Size = UDim2.new(1, -160, 1, -54)
+content.Position = UDim2.new(0, 160, 0, 44)
+content.BackgroundTransparency = 1
+content.BorderSizePixel = 0
+content.ScrollBarThickness = 3
+content.ScrollBarImageColor3 = THEME.subText
+content.AutomaticCanvasSize = Enum.AutomaticSize.Y
+content.CanvasSize = UDim2.new(0, 0, 0, 0)
+content.Visible = false
+content.Parent = window
+
+local contentLayout = Instance.new("UIListLayout")
+contentLayout.Padding = UDim.new(0, 6)
+contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+contentLayout.Parent = content
+
+-- ===== Toggle Row Builder =====
+local allRows = {}
+local function makeToggle(parent, name, desc, order)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(1, -10, 0, 52)
+    row.BackgroundColor3 = THEME.card
+    row.BorderSizePixel = 0
+    row.LayoutOrder = order or 1
+    corner(row, 8)
+    row.Parent = parent
+
+    label(row, name, UDim2.new(1, -80, 0, 18), UDim2.new(0, 12, 0, 8), THEME.text, Enum.Font.GothamMedium, 13)
+    label(row, desc, UDim2.new(1, -80, 0, 16), UDim2.new(0, 12, 0, 28), THEME.subText, Enum.Font.Gotham, 10)
+
+    local track = Instance.new("Frame")
+    track.Size = UDim2.new(0, 40, 0, 20)
+    track.Position = UDim2.new(1, -52, 0.5, -10)
+    track.BackgroundColor3 = THEME.trackOff
+    track.BorderSizePixel = 0
+    corner(track, 10)
+    track.Parent = row
+
+    local knob = Instance.new("Frame")
+    knob.Size = UDim2.new(0, 14, 0, 14)
+    knob.Position = UDim2.new(0, 3, 0.5, -7)
+    knob.BackgroundColor3 = THEME.text
+    knob.BorderSizePixel = 0
+    corner(knob, 10)
+    knob.Parent = track
+
+    local state = false
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BackgroundTransparency = 1
+    btn.Text = ""
+    btn.Parent = row
+
+    btn.MouseButton1Click:Connect(function()
+        state = not state
+        TS:Create(track, TweenInfo.new(0.2), {BackgroundColor3 = state and THEME.trackOn or THEME.trackOff}):Play()
+        TS:Create(knob, TweenInfo.new(0.2), {Position = state and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)}):Play()
+        notify((state and "ON: " or "OFF: ") .. name, state and Color3.fromRGB(76, 175, 80) or THEME.accent)
+    end)
+
+    table.insert(allRows, {row = row, name = name:lower()})
+    return row
+end
+
+local function sectionHeader(parent, text, order)
+    local h = label(parent, text, UDim2.new(1, -10, 0, 24), UDim2.new(0, 2, 0, 0), THEME.subText, Enum.Font.GothamBold, 12)
+    h.LayoutOrder = order or 1
+    return h
+end
+
+-- ===== Tab System =====
+local tabs = {}
+local currentTab = nil
+local function makeTab(name, page)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -16, 0, 30)
+    b.BackgroundColor3 = THEME.sidebar
+    b.Text = "  " .. name
+    b.TextColor3 = THEME.subText
+    b.Font = Enum.Font.GothamMedium
+    b.TextSize = 12
+    b.TextXAlignment = Enum.TextXAlignment.Left
+    b.AutoButtonColor = false
+    b.BorderSizePixel = 0
+    corner(b, 6)
+    b.Parent = tabHolder
+    table.insert(tabs, {btn = b, page = page, name = name})
+    b.MouseButton1Click:Connect(function()
+        for _, t in ipairs(tabs) do
+            t.btn.BackgroundColor3 = THEME.sidebar
+            t.btn.TextColor3 = THEME.subText
+            t.page.Visible = false
+        end
+        b.BackgroundColor3 = THEME.card
+        b.TextColor3 = THEME.text
+        page.Visible = true
+        currentTab = page
+    end)
+    return b
+end
+
+-- Pages
+local pages = {}
+local function makePage()
+    local p = Instance.new("Frame")
+    p.Size = UDim2.new(1, 0, 1, 0)
+    p.BackgroundTransparency = 1
+    p.Visible = false
+    p.Parent = content
+    local l = Instance.new("UIListLayout")
+    l.Padding = UDim.new(0, 6)
+    l.SortOrder = Enum.SortOrder.LayoutOrder
+    l.Parent = p
+    return p
+end
+
+local pMain = makePage()
+local pBlatant = makePage()
+local pOthers = makePage()
+
+sectionHeader(pMain, "Aim Assist", 1)
+makeToggle(pMain, "Trajectory Line", "Draws the perfect shot line", 2)
+makeToggle(pMain, "Ghost Ball ESP", "Shows target ball ghost", 3)
+sectionHeader(pMain, "Protections", 4)
+makeToggle(pMain, "Auto Draggable", "Prevents aim reset", 5)
+makeToggle(pMain, "Cooldown Shield", "Protects during cooldown", 6)
+
+sectionHeader(pBlatant, "Blatant", 1)
+makeToggle(pBlatant, "Instant Win", "Forces pocket on hit", 2)
+makeToggle(pBlatant, "Infinite Power", "Locks power bar at 100%", 3)
+
+sectionHeader(pOthers, "Others", 1)
+makeToggle(pOthers, "Key System Info", "Shows current key status", 2)
+
+makeTab("Main", pMain)
+makeTab("Blatant", pBlatant)
+makeTab("Others", pOthers)
+
+-- Search filter
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local q = searchBox.Text:lower()
+    for _, r in ipairs(allRows) do
+        r.row.Visible = (q == "") or string.find(r.name, q, 1, true) ~= nil
+    end
+end)
+
+-- ===== Key Gate Screen =====
+local keyScreen = Instance.new("Frame")
+keyScreen.Name = "KeyGate"
+keyScreen.Size = UDim2.new(1, 0, 1, -44)
+keyScreen.Position = UDim2.new(0, 0, 0, 44)
+keyScreen.BackgroundColor3 = THEME.bg
+keyScreen.BorderSizePixel = 0
+keyScreen.Parent = window
+
+label(keyScreen, "🔑  Key System", UDim2.new(1, 0, 0, 24), UDim2.new(0, 0, 0, 30), THEME.text, Enum.Font.GothamBold, 16).TextXAlignment = Enum.TextXAlignment.Center
+label(keyScreen, "Masukkan key untuk membuka hub", UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 58), THEME.subText, Enum.Font.Gotham, 12).TextXAlignment = Enum.TextXAlignment.Center
+
+local keyInput = Instance.new("TextBox")
+keyInput.Size = UDim2.new(0, 260, 0, 36)
+keyInput.Position = UDim2.new(0.5, -130, 0, 90)
+keyInput.BackgroundColor3 = THEME.card
+keyInput.PlaceholderText = "Enter key here..."
+keyInput.PlaceholderColor3 = THEME.subText
+keyInput.Text = ""
+keyInput.TextColor3 = THEME.text
+keyInput.Font = Enum.Font.GothamMedium
+keyInput.TextSize = 13
+keyInput.ClearTextOnFocus = false
+keyInput.BorderSizePixel = 0
+corner(keyInput, 8)
+stroke(keyInput, Color3.fromRGB(60, 60, 60), 1)
+keyInput.Parent = keyScreen
+
+local function makeActionBtn(text, x, color)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(0, 124, 0, 34)
+    b.Position = UDim2.new(0.5, x, 0, 138)
+    b.BackgroundColor3 = color
+    b.Text = text
+    b.TextColor3 = Color3.new(1, 1, 1)
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 12
+    b.AutoButtonColor = true
+    b.BorderSizePixel = 0
+    corner(b, 8)
+    b.Parent = keyScreen
+    return b
+end
+
+local enterBtn = makeActionBtn("Enter Key", -130, THEME.card)
+stroke(enterBtn, Color3.fromRGB(70, 70, 70), 1)
+local getKeyBtn = makeActionBtn("Get Key", 6, THEME.accent)
+
+-- GET KEY: salin link ke clipboard
+getKeyBtn.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(KEY_LINK)
+        notify("Link disalin! Buka di browser.", Color3.fromRGB(76, 175, 80))
+    else
+        notify("setclipboard tidak didukung executor ini.", THEME.accent)
+        print("LINK:", KEY_LINK)
+    end
+end)
+
+-- ENTER KEY: validasi
+local function unlockHub()
+    TS:Create(keyScreen, TweenInfo.new(0.35), {BackgroundTransparency = 1}):Play()
+    task.delay(0.35, function()
+        keyScreen.Visible = false
+        sidebar.Visible = true
+        content.Visible = true
+        tabs[1].btn.MouseButton1Click:Fire()
+    end)
+    notify("Key valid — hub terbuka.", Color3.fromRGB(76, 175, 80))
+end
+
+enterBtn.MouseButton1Click:Connect(function()
+    local entered = keyInput.Text:gsub("%s", "")
+    if entered == VALID_KEY then
+        unlockHub()
+    else
+        stroke(keyInput, THEME.accent, 1.5)
+        notify("Key salah. Coba lagi.", THEME.accent)
+        task.delay(0.8, function()
+            if keyInput and keyInput.Parent then stroke(keyInput, Color3.fromRGB(60, 60, 60), 1) end
+        end)
+    end
+end)
+
+print("[J] Argon Hub X loaded. Get Key = salin link, Enter Key = validasi.")
